@@ -4357,7 +4357,7 @@ def CheckClassNames(filename, clean_lines, linenum, error):
         return
     clazzName = result.group(1)
     if string.rfind(clazzName, "Class") != (len(clazzName) - 5):
-        error(filename, linenum, 'triumph/class_name', 1, "class name {0} is not correct".format(clazzName))
+        error(filename, linenum, 'triumph/class_name', 1, "class name {0} needs to have the 'Class' suffix".format(clazzName))
 
 def CheckFileName(filename, error):
     base = os.path.basename(filename)
