@@ -239,6 +239,9 @@ _ERROR_CATEGORIES = [
     'whitespace/semicolon',
     'whitespace/tab',
     'whitespace/todo',
+
+    'triumph/class_name',
+    'triumph/file_name'
     ]
 
 # These error categories are no longer enforced by cpplint, but for backwards-
@@ -4347,6 +4350,20 @@ def CheckAltTokens(filename, clean_lines, linenum, error):
           'Use operator %s instead of %s' % (
               _ALT_TOKEN_REPLACEMENT[match.group(1)], match.group(1)))
 
+def CheckClassNames(filename, clean_lines, linenum, error):
+    line = clean_lines.elided[linenum]
+    result = Match(r'^\s*class\s+(\w+)[^\w]+', line)
+    if result == None:
+        return
+    clazzName = result.group(1)
+    if string.find(clazzName, "Class") != (len(clazzName) - 5):
+        error(filename, linenum, 'triumph/class_name', 1, "class name {0} is not correct".format(clazzName))
+
+def CheckFileName(filename, error):
+    base = os.path.basename(filename)
+    if Search(r'[A-Z]', filename) != None:
+        error(filename, 0, 'triumph/file_name', 1, "file name {0} should be under_score not CamelCase".format(base))
+
 
 def GetLineWidth(line):
   """Determines the width of the line in column positions.
@@ -4484,6 +4501,7 @@ def CheckStyle(filename, clean_lines, linenum, file_extension, nesting_state,
   CheckRValueReference(filename, clean_lines, linenum, nesting_state, error)
   CheckCheck(filename, clean_lines, linenum, error)
   CheckAltTokens(filename, clean_lines, linenum, error)
+  CheckClassNames(filename, clean_lines, linenum, error)
   classinfo = nesting_state.InnermostClass()
   if classinfo:
     CheckSectionSpacing(filename, clean_lines, classinfo, linenum, error)
@@ -6044,6 +6062,7 @@ def ProcessFileData(filename, file_extension, lines, error,
   CheckForBadCharacters(filename, lines, error)
 
   CheckForNewlineAtEOF(filename, lines, error)
+  CheckFileName(filename, error)
 
 def ProcessConfigOverrides(filename):
   """ Loads the configuration files and processes the config overrides.
