@@ -4356,7 +4356,7 @@ def CheckClassNames(filename, clean_lines, linenum, error):
     if result == None:
         return
     clazzName = result.group(1)
-    if string.find(clazzName, "Class") != (len(clazzName) - 5):
+    if string.rfind(clazzName, "Class") != (len(clazzName) - 5):
         error(filename, linenum, 'triumph/class_name', 1, "class name {0} is not correct".format(clazzName))
 
 def CheckFileName(filename, error):
